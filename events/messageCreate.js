@@ -2,12 +2,16 @@ const Profile =
 require("../models/profileSchema");
 
 const EMOJI =
-"<:rauma:1503177577643118804> ";
+"<:rauma:1503177577643118804>";
 
 const STAFF_ROLE_ID =
 "1501714428729491506";
 
 function formatRauMa(points) {
+
+    if (points >= 1000000000) {
+        return `${points / 1000000000} tỷ rau má`;
+    }
 
     if (points >= 1000000) {
         return `${points / 1000000} tấn rau má`;
@@ -47,6 +51,13 @@ function parseAmount(amount) {
         );
     }
 
+    if (amount.endsWith("b")) {
+
+        return Math.floor(
+            parseFloat(amount) * 1000000000
+        );
+    }
+
     return Math.floor(
         parseFloat(amount)
     );
@@ -63,25 +74,21 @@ module.exports = async (
 
     // ====================
     // ADD POINTS
-    // r60k @user
+    // rm @user 60k
     // ====================
 
     if (
-        message.content.startsWith("r") &&
-        !message.content.startsWith("rr") &&
-        !message.content.startsWith("rcheck")
+        message.content.startsWith("rm ")
     ) {
 
         const args =
         message.content.split(" ");
 
-        const amount =
-        parseAmount(
-            args[0].replace("r", "")
-        );
-
         const user =
         message.mentions.users.first();
+
+        const amount =
+        parseAmount(args[2]);
 
         if (
             !amount ||
@@ -128,29 +135,27 @@ module.exports = async (
         return message.reply({
 
             content:
-            `${user} Đã được ban cho **${formatRauMa(amount)}** ${EMOJI}`
+            `${user} đã được ban cho **${formatRauMa(amount)}** ${EMOJI}`
         });
     }
 
     // ====================
     // REMOVE POINTS
-    // rr60k @user
+    // rmremove @user 60k
     // ====================
 
     if (
-        message.content.startsWith("rr")
+        message.content.startsWith("rmremove ")
     ) {
 
         const args =
         message.content.split(" ");
 
-        const amount =
-        parseAmount(
-            args[0].replace("rr", "")
-        );
-
         const user =
         message.mentions.users.first();
+
+        const amount =
+        parseAmount(args[2]);
 
         if (
             !amount ||
@@ -198,11 +203,11 @@ module.exports = async (
 
     // ====================
     // CHECK POINTS
-    // rcheck
+    // rmcheck
     // ====================
 
     if (
-        message.content.startsWith("rcheck")
+        message.content.startsWith("rmcheck")
     ) {
 
         const target =
@@ -228,7 +233,7 @@ module.exports = async (
             });
         }
 
-        // staff check public
+        // public check
         if (
             message.mentions.users.first()
         ) {
@@ -248,5 +253,12 @@ module.exports = async (
             `Bạn hiện có **${formatRauMa(profile.points)}** ${EMOJI}`
         });
 
+        // tự xóa sau 5 giây
+        setTimeout(() => {
+
+            reply.delete()
+            .catch(() => {});
+
+        }, 5000);
     }
 };
