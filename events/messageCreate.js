@@ -2,7 +2,7 @@ const Profile =
 require("../models/profileSchema");
 
 const EMOJI =
-"<:3636:1504588328119439471>";
+"<:rauma:1503177577643118804> ";
 
 const STAFF_ROLE_ID =
 "1501714428729491506";
@@ -98,7 +98,7 @@ module.exports = async (
             return message.reply({
 
                 content:
-                "-# Chỉ staff mới được phát rau má."
+                "Chỉ staff mới được phát rau má."
             });
         }
 
@@ -128,7 +128,7 @@ module.exports = async (
         return message.reply({
 
             content:
-            `-# ${user} Đã được ban cho **${formatRauMa(amount)}** ${EMOJI}`
+            `${user} Đã được ban cho **${formatRauMa(amount)}** ${EMOJI}`
         });
     }
 
@@ -167,7 +167,7 @@ module.exports = async (
             return message.reply({
 
                 content:
-                "-# Chỉ staff mới được trộm rau má."
+                "Chỉ staff mới được trộm rau má."
             });
         }
 
@@ -192,7 +192,7 @@ module.exports = async (
         return message.reply({
 
             content:
-            `-# ${user} vừa bị lấy đi **${formatRauMa(amount)}** ${EMOJI}`
+            `${user} vừa bị lấy đi **${formatRauMa(amount)}** ${EMOJI}`
         });
     }
 
@@ -236,7 +236,7 @@ module.exports = async (
             return message.reply({
 
                 content:
-                `-# ${target.username} hiện có **${formatRauMa(profile.points)}** ${EMOJI}`
+                `${target.username} hiện có **${formatRauMa(profile.points)}** ${EMOJI}`
             });
         }
 
@@ -245,7 +245,7 @@ module.exports = async (
         await message.reply({
 
             content:
-            `-# Bạn hiện có **${formatRauMa(profile.points)}** ${EMOJI}`
+            `Bạn hiện có **${formatRauMa(profile.points)}** ${EMOJI}`
         });
 
     }
