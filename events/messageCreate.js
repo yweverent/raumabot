@@ -141,11 +141,11 @@ module.exports = async (
 
     // ====================
     // REMOVE POINTS
-    // rmremove @user 60k
+    // rmtru @user 60k
     // ====================
 
     if (
-        message.content.startsWith("rmremove ")
+        message.content.startsWith("rmtru ")
     ) {
 
         const args =
