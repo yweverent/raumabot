@@ -1,42 +1,51 @@
-const fs = require("fs");
-const path = require("path");
+const fs =
+require("fs");
 
-module.exports = (client) => {
+const path =
+require("path");
 
-    client.commands = new Map();
+module.exports = (
+    client
+) => {
 
-    const foldersPath =
-    path.join(__dirname, "../commands");
+    client.commands =
+    new Map();
 
-    const commandFolders =
-    fs.readdirSync(foldersPath);
+    const commandsPath =
+    path.join(
+        __dirname,
+        "../commands"
+    );
 
-    for (const folder of commandFolders) {
+    const commandFiles =
 
-        const commandsPath =
-        path.join(foldersPath, folder);
+    fs.readdirSync(
+        commandsPath
+    )
 
-        const commandFiles =
-        fs.readdirSync(commandsPath)
-        .filter(file =>
-            file.endsWith(".js")
+    .filter(file =>
+
+        file.endsWith(".js")
+    );
+
+    for (
+        const file
+        of commandFiles
+    ) {
+
+        const filePath =
+
+        path.join(
+            commandsPath,
+            file
         );
 
-        for (const file of commandFiles) {
+        const command =
+        require(filePath);
 
-            const filePath =
-            path.join(commandsPath, file);
-
-            const command =
-            require(filePath);
-
-            if (!command.data)
-                continue;
-
-            client.commands.set(
-                command.data.name,
-                command
-            );
-        }
+        client.commands.set(
+            file,
+            command
+        );
     }
 };
