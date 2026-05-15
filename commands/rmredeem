@@ -1,0 +1,155 @@
+const Profile =
+require("../models/profileSchema");
+
+const rewards =
+require("../data/rewards");
+
+const sendLog =
+require("../utils/sendLog");
+
+const EMOJI =
+"<:rauma:1503177577643118804>";
+
+const STAFF_ROLE_ID =
+"1501714428729491506";
+
+function formatRauMa(points) {
+
+    return `${points.toLocaleString("vi-VN")} lá rau má ${EMOJI}`;
+}
+
+module.exports = async (
+    client,
+    message
+) => {
+
+    if (
+        !message.content.startsWith(
+            "rmredeem "
+        )
+    ) return;
+
+    const args =
+    message.content.split(" ");
+
+    const user =
+    message.mentions.users.first();
+
+    const rewardId =
+    args[2]?.toLowerCase();
+
+    const quantity =
+    parseInt(args[3]) || 1;
+
+    if (!user) {
+
+        return message.reply({
+
+            content:
+            "Vui lòng mention khách hàng đổi thưởng."
+        });
+    }
+
+    const reward =
+    rewards[rewardId];
+
+    if (!reward) {
+
+        return message.reply({
+
+            content:
+            "Phần thưởng không tồn tại."
+        });
+    }
+
+    const isStaff =
+    message.member.roles.cache.has(
+        STAFF_ROLE_ID
+    );
+
+    if (!isStaff) {
+
+        return message.reply({
+
+            content:
+            "Để đổi thưởng vui lòng tạo ticket."
+        });
+    }
+
+    let profile =
+    await Profile.findOne({
+
+        userId: user.id,
+        guildId: message.guild.id
+    });
+
+    if (!profile) {
+
+        return message.reply({
+
+            content:
+            "Người dùng chưa có hồ sơ."
+        });
+    }
+
+    const totalCost =
+    reward.cost * quantity;
+
+    if (
+        profile.points < totalCost
+    ) {
+
+        return message.reply({
+
+            content:
+            `${user} không đủ rau má để đổi thưởng ${EMOJI}`
+        });
+    }
+
+    profile.points -= totalCost;
+
+for (
+    let i = 0;
+    i < quantity;
+    i++
+) {
+
+    profile.redeemedRewards.push({
+
+        reward:
+        reward.name,
+
+        cost:
+        reward.cost,
+
+        redeemedAt:
+        new Date()
+    });
+}
+    await profile.save();
+
+    await sendLog(
+
+        client,
+
+        `${EMOJI} REDEEM RAU MÁ`,
+
+        `Người thực hiện:
+${message.author}
+
+Khách hàng:
+${user}
+
+Phần thưởng:
+${reward.name} x${quantity}
+
+Số rau má đã đổi:
+${formatRauMa(totalCost)}`
+    );
+
+    return message.reply({
+
+        content:
+        `${user} đã đổi thành công **${reward.name} x${quantity}**`
+    });
+};

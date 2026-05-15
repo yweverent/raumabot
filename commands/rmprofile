@@ -1,0 +1,170 @@
+const Profile =
+require("../models/profileSchema");
+
+const {
+    EmbedBuilder
+} = require("discord.js");
+
+const EMOJI =
+"<:rauma:1503177577643118804>";
+
+function formatRauMa(points) {
+
+    return `${points.toLocaleString("vi-VN")} lá rau má`;
+}
+
+module.exports = async (
+    client,
+    message
+) => {
+
+    if (
+        message.content !== "rmprofile" &&
+        message.content !== "rmprf" &&
+        !message.content.startsWith(
+            "rmprofile "
+        ) &&
+        !message.content.startsWith(
+            "rmprf "
+        )
+    ) return;
+
+    const target =
+    message.mentions.users.first()
+    || message.author;
+
+    let profile =
+    await Profile.findOne({
+
+        userId: target.id,
+        guildId: message.guild.id
+    });
+
+    if (!profile) {
+
+        profile =
+        await Profile.create({
+
+            userId: target.id,
+            guildId: message.guild.id,
+
+            points: 0,
+
+            totalEarned: 0,
+
+            redeemedRewards: [],
+
+            customerRank: "Chưa có"
+        });
+    }
+
+    const allProfiles =
+    await Profile.find({
+
+        guildId: message.guild.id
+    })
+
+    .sort({
+        points: -1
+    });
+
+    const rank =
+    allProfiles.findIndex(
+
+        p => p.userId === target.id
+    ) + 1;
+
+    const embed =
+    new EmbedBuilder()
+
+    .setColor("#ffffff")
+
+    .setTitle(
+        `${target.username}`
+    )
+
+    .setThumbnail(
+
+        target.displayAvatarURL({
+
+            dynamic: true
+        })
+    )
+
+    .addFields(
+
+        {
+
+            name:
+            `Hồ sơ Khách Hàng`,
+
+            value:
+            formatRauMa(
+                profile.points
+            ),
+
+            inline: true
+        },
+
+         {
+
+            name:
+            `Danh hiệu:`,
+
+            value:
+            profile.customerRank,
+
+            inline: true
+        },
+
+        {
+
+            name:
+            `Tổng rau má tích lũy`,
+
+            value:
+            formatRauMa(
+                profile.totalEarned
+            ),
+
+            inline: true
+        },
+        
+
+        {
+
+            name:
+            `Xếp hạng:`,
+
+            value:
+            `#${rank}`,
+
+            inline: true
+        },
+
+
+        {
+
+            name:
+            `Đổi thưởng:`,
+
+            value:
+            `${profile.redeemedRewards.length} sản phẩm`,
+
+            inline: true
+        }
+    )
+
+    .setFooter({
+
+        text:
+        "Nem chua Thanh Hóa"
+    })
+
+    .setTimestamp();
+
+    return message.reply({
+
+        embeds: [embed]
+    });
+};

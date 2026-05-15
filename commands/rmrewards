@@ -1,0 +1,143 @@
+const Profile =
+require("../models/profileSchema");
+
+const {
+    EmbedBuilder
+} = require("discord.js");
+
+const EMOJI =
+"<:rauma:1503177577643118804>";
+
+const STAFF_ROLE_ID =
+"1501714428729491506";
+
+function formatRauMa(points) {
+
+    return `${points.toLocaleString("vi-VN")} lá rau má ${EMOJI}`;
+}
+
+module.exports = async (
+    client,
+    message
+) => {
+
+    if (
+        !message.content.startsWith(
+            "rmrewards"
+        )
+    ) return;
+
+    const isStaff =
+    message.member.roles.cache.has(
+        STAFF_ROLE_ID
+    );
+
+    const mentionedUser =
+    message.mentions.users.first();
+
+    const target =
+
+    isStaff && mentionedUser
+
+    ? mentionedUser
+
+    : message.author;
+
+    let profile =
+    await Profile.findOne({
+
+        userId: target.id,
+        guildId: message.guild.id
+    });
+
+    if (
+        !profile ||
+        !profile.redeemedRewards.length
+    ) {
+
+        return message.reply({
+
+            content:
+            "Chưa có lịch sử đổi thưởng."
+        });
+    }
+
+    const rewards =
+
+    profile.redeemedRewards
+
+    .slice(-10)
+
+    .reverse();
+
+    let description = "";
+
+    for (
+        let i = 0;
+        i < rewards.length;
+        i++
+    ) {
+
+        const reward =
+        rewards[i];
+
+        const date =
+
+        new Date(
+            reward.redeemedAt
+        )
+
+        .toLocaleString(
+            "vi-VN"
+        );
+
+        description +=
+
+        `${reward.reward}\n`;
+
+        description +=
+
+        `${formatRauMa(
+            reward.cost
+        )}\n`;
+
+        description +=
+
+        `${date}\n\n`;
+    }
+
+    const embed =
+    new EmbedBuilder()
+
+    .setColor("#ffffff")
+
+    .setTitle(
+
+        `Lịch sử đổi thưởng của ${target.username}`
+    )
+
+    .setThumbnail(
+
+        target.displayAvatarURL({
+
+            dynamic: true
+        })
+    )
+
+    .setDescription(
+        description
+    )
+
+    .setFooter({
+
+        text:
+        "Nem chua Thanh Hóa"
+    })
+
+    .setTimestamp();
+
+    return message.reply({
+
+        embeds: [embed]
+    });
+};
