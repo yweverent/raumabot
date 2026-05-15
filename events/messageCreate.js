@@ -261,4 +261,94 @@ module.exports = async (
 
         }, 5000);
     }
+}
+
+// ====================
+// RANK
+// rmrank
+// ====================
+
+if (
+    message.content === "rmrank"
+) {
+
+    const profiles =
+    await Profile.find({
+
+        guildId: message.guild.id
+    })
+
+    .sort({
+        points: -1
+    })
+
+    .limit(10);
+
+    if (!profiles.length) {
+
+        return message.reply({
+
+            content:
+            "Chưa có ai có rau má ${EMOJI}"
+        });
+    }
+
+    let description = "";
+
+    for (
+        let i = 0;
+        i < profiles.length;
+        i++
+    ) {
+
+        const profile =
+        profiles[i];
+
+        const user =
+        await client.users.fetch(
+            profile.userId
+        )
+
+        .catch(() => null);
+
+        description +=
+        `**#${i + 1}** • ${
+            user
+            ? user.username
+            : "Unknown User"
+        }\n`;
+
+        description +=
+        `${EMOJI} ${formatRauMa(profile.points)}\n\n`;
+    }
+
+    const {
+        EmbedBuilder
+    } = require("discord.js");
+
+    const embed =
+    new EmbedBuilder()
+
+    .setColor("#257b40")
+
+    .setTitle(
+        "Top Đại gia Rau má ${EMOJI}"
+    )
+
+    .setDescription(
+        description
+    )
+
+    .setFooter({
+
+        text:
+        "Nem chua Thanh Hoa"
+    })
+
+    .setTimestamp();
+
+    return message.reply({
+
+        embeds: [embed]
+    });
 };
