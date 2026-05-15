@@ -7,29 +7,12 @@ const EMOJI =
 const STAFF_ROLE_ID =
 "1501714428729491506";
 
+const CORE_TEAM_ROLE_ID =
+"1502857129445425172";
+
 function formatRauMa(points) {
 
-    if (points >= 1000000000) {
-        return `${points / 1000000000} tỷ rau má`;
-    }
-
-    if (points >= 1000000) {
-        return `${points / 1000000} tấn rau má`;
-    }
-
-    if (points >= 100000) {
-        return `${points / 100000} tạ rau má`;
-    }
-
-    if (points >= 10000) {
-        return `${points / 10000} tá rau má`;
-    }
-
-    if (points >= 1000) {
-        return `${points / 1000} ký rau má`;
-    }
-
-    return `${points} lá rau má`;
+    return `${points.toLocaleString("vi-VN")} lá rau má`;
 }
 
 function parseAmount(amount) {
@@ -265,9 +248,10 @@ module.exports = async (
 
         const profiles =
         await Profile.find({
-    guildId: message.guild.id,
-    points: { $gt: 0 }
-})
+
+            guildId: message.guild.id,
+            points: { $gt: 0 }
+        })
 
         .sort({
             points: -1
@@ -338,9 +322,52 @@ module.exports = async (
 
         .setTimestamp();
 
-                return message.reply({
+        return message.reply({
 
             embeds: [embed]
+        });
+    }
+
+    // ====================
+    // RESET ALL
+    // rmresetall
+    // ====================
+
+    if (
+        message.content === "rmresetall"
+    ) {
+
+        const isStaff =
+        message.member.roles.cache.has(
+            CORE_TEAM_ROLE_ID
+        );
+
+        if (!isStaff) {
+
+            return message.reply({
+
+                content:
+                "Bạn không có quyền dùng lệnh này."
+            });
+        }
+
+        await Profile.updateMany(
+
+            {
+                guildId: message.guild.id
+            },
+
+            {
+                $set: {
+                    points: 0
+                }
+            }
+        );
+
+        return message.reply({
+
+            content:
+            `Đã reset toàn bộ rau má trong server ${EMOJI}`
         });
     }
 };
