@@ -338,9 +338,9 @@ module.exports = async (
 
         .setTimestamp();
 
-        return message.reply({
+                return message.reply({
 
             embeds: [embed]
         });
     }
-}
+};
