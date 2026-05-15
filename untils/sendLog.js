@@ -6,12 +6,14 @@ const LOG_CHANNEL_ID =
 "1501634643882151997";
 
 module.exports = async (
+
     client,
     title,
     description
 ) => {
 
     const channel =
+
     client.channels.cache.get(
         LOG_CHANNEL_ID
     );
@@ -21,11 +23,13 @@ module.exports = async (
     const embed =
     new EmbedBuilder()
 
-    .setColor("#ffffff")
+    .setColor("#d9eed6")
 
     .setTitle(title)
 
-    .setDescription(description)
+    .setDescription(
+        description
+    )
 
     .setTimestamp();
 
