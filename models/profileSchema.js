@@ -16,12 +16,6 @@ new mongoose.Schema({
         required: true
     },
 
-    customerRank: {
-
-        type: String,
-        default: "Chưa có"
-    }
-
     points: {
 
         type: Number,
@@ -40,6 +34,11 @@ new mongoose.Schema({
         default: []
     },
 
+    customerRank: {
+
+        type: String,
+        default: "Chưa có"
+    }
 });
 
 module.exports =
