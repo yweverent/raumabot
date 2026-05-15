@@ -265,9 +265,9 @@ module.exports = async (
 
         const profiles =
         await Profile.find({
-
-            guildId: message.guild.id
-        })
+    guildId: message.guild.id,
+    points: { $gt: 0 }
+})
 
         .sort({
             points: -1
@@ -320,7 +320,7 @@ module.exports = async (
         const embed =
         new EmbedBuilder()
 
-        .setColor("#257b40")
+        .setColor("#d9eed6")
 
         .setTitle(
             `Top Đại gia Rau má ${EMOJI}`
