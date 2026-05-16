@@ -60,9 +60,9 @@ module.exports = async (
 
         let medal = "";
 
-        if (i === 0) medal = "🥇";
-        if (i === 1) medal = "🥈";
-        if (i === 2) medal = "🥉";
+        if (i === 0) medal = "<:emoji_239:1502448425659138129>";
+        if (i === 1) medal = "<:emoji_239:1502448428528173057>";
+        if (i === 2) medal = "<:emoji_37:1502448447880695818>";
 
         description +=
         `${medal} **#${i + 1}** • ${

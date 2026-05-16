@@ -4,9 +4,6 @@ require("../models/profileSchema");
 const EMOJI =
 "<:rauma:1503177577643118804>";
 
-const sendLog =
-require("../utils/sendLog");
-
 function formatRauMa(points) {
 
     return `${points.toLocaleString("vi-VN")} lá rau má`;
@@ -51,7 +48,13 @@ module.exports = async (
         return message.reply({
 
             content:
-            `${target.username} hiện có **${formatRauMa(profile.points)}** ${EMOJI}`
+            `**${
+    message.guild.members.cache.get(
+        target.id
+    )?.displayName
+
+    || target.username
+}** hiện có **${formatRauMa(profile.points)}** ${EMOJI}`
         });
     }
 

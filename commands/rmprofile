@@ -80,8 +80,13 @@ module.exports = async (
     .setColor("#ffffff")
 
     .setTitle(
-        `${target.username}`
-    )
+
+    message.guild.members.cache.get(
+        target.id
+    )?.displayName
+
+    || target.username
+)
 
     .setThumbnail(
 

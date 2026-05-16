@@ -93,7 +93,7 @@ module.exports = async (
 
         description +=
 
-        `${reward.reward}\n`;
+        `**${reward.reward}\n**`;
 
         description +=
 
