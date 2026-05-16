@@ -4,6 +4,9 @@ require("../models/profileSchema");
 const STAFF_ROLE_ID =
 "1501714428729491506";
 
+const EMOJI =
+"<:rauma:1503177577643118804>";
+
 module.exports = async (
     client,
     message
