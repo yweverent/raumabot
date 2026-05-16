@@ -15,6 +15,7 @@ module.exports = async (
         require("../commands/rmset"),
         require("../commands/rmredeem"),
         require("../commands/rmrewards"),
+        require("../commands/rmprofile"),
     ];
 
     for (const command of commands) {
