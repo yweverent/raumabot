@@ -113,15 +113,14 @@ module.exports = async (
 
     .setTitle(
 
-        `Lịch sử đổi thưởng của ${
+    `Lịch sử đổi thưởng của ${
         message.guild.members.cache.get(
             target.id
         )?.displayName
 
         || target.username
     }`
-)`
-    )
+)
 
     .setThumbnail(
 
