@@ -111,6 +111,17 @@ module.exports = async (
             inline: true
         },
 
+        {
+
+            name:
+            `Xếp hạng:`,
+
+            value:
+            `#${rank}`,
+
+            inline: true
+        },
+
          {
 
             name:
@@ -131,18 +142,6 @@ module.exports = async (
             formatRauMa(
                 profile.totalEarned
             ),
-
-            inline: true
-        },
-        
-
-        {
-
-            name:
-            `Xếp hạng:`,
-
-            value:
-            `#${rank}`,
 
             inline: true
         },
