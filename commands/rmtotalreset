@@ -1,0 +1,90 @@
+const Profile =
+require("../models/profileSchema");
+
+const STAFF_ROLE_ID =
+"1501714428729491506";
+
+const EMOJI =
+"<:rauma:1503177577643118804>";
+
+const sendLog =
+require("../utils/sendLog");
+
+module.exports = async (
+    client,
+    message
+) => {
+
+    if (
+        !message.content.startsWith(
+            "rmtotalreset "
+        )
+    ) return;
+
+    const isStaff =
+    message.member.roles.cache.has(
+        STAFF_ROLE_ID
+    );
+
+    if (!isStaff) {
+
+        return message.reply({
+
+            content:
+            "Bạn không có quyền dùng lệnh này."
+        });
+    }
+
+    const user =
+    message.mentions.users.first();
+
+    if (!user) {
+
+        return message.reply({
+
+            content:
+            "Vui lòng mention người dùng."
+        });
+    }
+
+    let profile =
+    await Profile.findOne({
+
+        userId: user.id,
+        guildId: message.guild.id
+    });
+
+    if (!profile) {
+
+        return message.reply({
+
+            content:
+            "Người dùng chưa có hồ sơ."
+        });
+    }
+
+    profile.points = 0;
+
+    profile.totalEarned = 0;
+
+    await profile.save();
+
+    await sendLog(
+
+        client,
+
+        `${EMOJI} RESET TỔNG TÍCH LŨY`,
+
+        `Người thực hiện:
+${message.author}
+
+Người bị reset:
+${user}`
+    );
+
+    return message.reply({
+
+        content:
+        `Đã reset tổng điểm tích lũy của ${user} ${EMOJI}`
+    });
+};

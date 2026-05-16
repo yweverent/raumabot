@@ -1,0 +1,69 @@
+const Profile =
+require("../models/profileSchema");
+
+const OWNER =
+"1494818334468866189";
+
+const EMOJI =
+"<:rauma:1503177577643118804>";
+
+const sendLog =
+require("../utils/sendLog");
+
+module.exports = async (
+    client,
+    message
+) => {
+
+    if (
+        message.content !==
+        "rmtotalresetall"
+    ) return;
+
+    const isStaff =
+    message.member.roles.cache.has(
+        OWNER
+    );
+
+    if (!isStaff) {
+
+        return message.reply({
+
+            content:
+            "Bạn không có quyền dùng lệnh này."
+        });
+    }
+
+    await Profile.updateMany(
+
+        {
+            guildId:
+            message.guild.id
+        },
+
+        {
+            $set: {
+
+                points: 0,
+
+                totalEarned: 0
+            }
+        }
+    );
+
+    await sendLog(
+
+        client,
+
+        `Reset rau má toàn hệ thống ${EMOJI} `,
+
+        `Người thực hiện:
+${message.author}`
+    );
+
+    return message.reply({
+
+        content:
+        `Đã reset toàn bộ rau má và tổng tích lũy ${EMOJI}`
+    });
+};
